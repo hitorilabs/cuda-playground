@@ -14,7 +14,9 @@ These are all the important sections that I missed because I didn't actually rea
 
 Doesn't help that I'm completely new to C++ in general... 
 
-1. Pull down the [cutlass project](https://github.com/NVIDIA/cutlass)
+1. Pull down the [CUTLASS project](https://github.com/NVIDIA/cutlass)
+
+2. Make the example file (e.g. `cutlass_print_fp16.cu`)
 
 The example in the `cutlass` docs just provided the code:
 
@@ -33,8 +35,6 @@ int main() {
   return 0;
 }
 ```
-
-2. Make the example file (e.g. `cutlass_print_fp16.cu`)
 
 However, you actually need to tell cmake that it needs to be compiled with `nvcc` by using the `.cu` file extension instead of `.cpp`, otherwise you will see this mysterious error:
 
@@ -72,7 +72,25 @@ mkdir build && cd build
 cmake .. -D CMAKE_CUDA_ARCHITECTURES=86
 ```
 
-Note: running cmake .. regularly now will give you a warning
+You need to specify `CMAKE_CUDA_ARCHITECTURES` for your specific hardware (RTX 3090 => 86)
+
+|**GPU**|**CUDA Compute Capability**|**Minimum CUDA Toolkit Required by CUTLASS-3**|
+|---|---|---|
+|NVIDIA V100 Tensor Core GPU            |7.0|11.4|
+|NVIDIA TitanV                          |7.0|11.4|
+|NVIDIA GeForce RTX 2080 TI, 2080, 2070 |7.5|11.4|
+|NVIDIA T4                              |7.5|11.4|
+|NVIDIA A100 Tensor Core GPU            |8.0|11.4|
+|NVIDIA A10                             |8.6|11.4|
+|NVIDIA GeForce RTX 3090                |8.6|11.4|
+|NVIDIA GeForce RTX 4090                |8.9|11.8|
+|NVIDIA L40                             |8.9|11.8|
+|NVIDIA H100 Tensor Core GPU            |9.0|11.8|
+
+[source](https://github.com/NVIDIA/cutlass/tree/main#hardware)
+
+
+Note: running `cmake ..` regularly now will give you the following warning. 
 
 ```
 -- Configuring done
@@ -94,6 +112,7 @@ CMake Warning (dev) in CMakeLists.txt:
   CUDA_ARCHITECTURES is empty for target "cuda-playground".
 This warning is for project developers.  Use -Wno-dev to suppress it.
 ```
+
 
 5. Test the compiled output in `build/cuda-playground`
 
