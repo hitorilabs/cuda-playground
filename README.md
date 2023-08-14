@@ -34,6 +34,8 @@ int main() {
 }
 ```
 
+2. Make the example file (e.g. `cutlass_print_fp16.cu`)
+
 However, you actually need to tell cmake that it needs to be compiled with `nvcc` by using the `.cu` file extension instead of `.cpp`, otherwise you will see this mysterious error:
 
 ```
@@ -49,7 +51,7 @@ make[1]: *** [CMakeFiles/Makefile2:83: CMakeFiles/cuda-playground.dir/all] Error
 make: *** [Makefile:91: all] Error 2
 ```
 
-Then in `CMakeLists.txt` you need to include the cutlass headers 
+3. Then create `CMakeLists.txt` where you need to add the `include_directories` from CUTLASS
 
 ```cmake
 set(CMAKE_CXX_STANDARD 17)
@@ -61,7 +63,10 @@ include_directories($ENV{HOME}/cutlass/include) # or whatever path you pulled cu
 add_executable(cuda-playground cutlass_print_fp16.cu)
 ```
 
+4. Prepare the build directory and run `cmake` to generate your `Makefile`
+
 The convention seems to be making a `build` directory and then `cmake ..` back to the directory with the `CMakeLists.txt`
+
 ```sh
 mkdir build && cd build
 cmake .. -D CMAKE_CUDA_ARCHITECTURES=86
@@ -88,4 +93,10 @@ CMake Warning (dev) in CMakeLists.txt:
 
   CUDA_ARCHITECTURES is empty for target "cuda-playground".
 This warning is for project developers.  Use -Wno-dev to suppress it.
+```
+
+5. Test the compiled output in `build/cuda-playground`
+
+```
+./cuda-playground
 ```
